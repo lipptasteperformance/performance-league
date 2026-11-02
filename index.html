@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>LIPPTASTE Performance League</title>
+<link rel="icon" href="bilder/lipptaste-logo-weiss.png">
+<link rel="stylesheet" href="liga.css">
+<script>
+  // ---------- Einstellungen: hier anpassen ----------
+  window.LIGA_EINSTELLUNGEN = {
+    saison: '2027',
+    // Ab diesem Spieltag dürfen die Prämien angezeigt werden
+    praemienAbSpieltag: 2,
+    // Auf true setzen, sobald die Prämien enthüllt werden sollen
+    praemienFreigegeben: false,
+    // Prämientexte erst am Tag der Enthüllung eintragen, vorher leer lassen
+    // (alles, was hier steht, ist auf GitHub für jeden lesbar)
+    praemiePlatz1: '',
+    praemiePlatz2: '',
+    praemieHinweis: '',
+    // Passwortschutz: leer = kein Passwort. Den Code dafür erzeugt Claude aus eurem Passwort.
+    passwortCode: '7de39f5c4768867427428ee79170568313de33c3e28db4c363f57ed173bbb1c1',
+  };
+</script>
+</head>
+<body>
+<div class="lg-gate-screen" id="zugang" hidden>
+  <form class="lg-gate-box" id="zugang-form" novalidate>
+    <img class="lg-logo" src="bilder/lipptaste-logo-weiss.png" alt="LIPPTASTE">
+    <h1 class="lg-title lg-x"><span>Performance</span><span>League</span></h1>
+    <label class="lg-gate-label" for="zugang-pw">Passwort</label>
+    <input id="zugang-pw" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false">
+    <p class="lg-gate-error" id="zugang-fehler" hidden>Das Passwort stimmt nicht. Frag deinen Storemanager.</p>
+    <button type="submit" class="lg-gate-btn lg-x">Zur Liga</button>
+  </form>
+</div>
+<div class="lg" id="liga">
+  <header class="lg-hero" id="kopf">
+    <img class="lg-logo" src="bilder/lipptaste-logo-weiss.png" alt="LIPPTASTE">
+    <p class="lg-kicker"><span>Saison <span data-saison>2027</span></span></p>
+    <h1 class="lg-title lg-x"><span>Performance</span><span>League</span></h1>
+    <div class="lg-spot">
+      <span class="crest-slot" id="leader-crest"></span>
+      <div class="who">
+        <span class="lbl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>Tabellenführer</span>
+        <span class="nm lg-x" id="leader-name">—</span>
+      </div>
+      <div class="pk"><b id="leader-pts">—</b><small>Punkte</small></div>
+    </div>
+  </header>
+
+  <p class="lg-error" id="fehler" hidden>Die Ligadaten konnten nicht geladen werden. Prüfe, ob die Dateien im Ordner „daten“ liegen und richtig heißen.</p>
+
+  <section class="lg-sec" id="spieltag" aria-label="Spieltag wählen">
+    <div class="lg-sechead"><h2 class="lg-x">Spieltag</h2></div>
+    <div class="lg-dayrow" id="spieltage"></div>
+  </section>
+
+  <section class="lg-sec" id="tabelle">
+    <div class="lg-sechead"><h2 class="lg-x">Tabelle</h2><span class="sub" id="tabelle-sub">—</span></div>
+    <div class="lg-cols lg-boardhead">
+      <span>Pl.</span>
+      <span>Team</span>
+      <span>Ø €/Std.</span>
+      <span>Pkt.</span>
+    </div>
+    <ol class="lg-board" id="board" aria-label="Tabelle"></ol>
+    <ul class="lg-legend">
+      <li><i class="g"></i>Prämie Platz 1</li>
+      <li><i class="s"></i>Prämie Platz 2</li>
+    </ul>
+    <p class="lg-note">Tippe auf ein Team, um seine Punkte je Kategorie aufzuklappen.</p>
+  </section>
+
+  <section class="lg-sec" id="preise">
+    <div class="lg-sechead"><h2 class="lg-x">Prämien</h2></div>
+    <div class="lg-prizes" data-prizes hidden>
+      <div class="lg-prize gold">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3zm0 4H6v1a2 2 0 0 0 1 1.7zm10 0v2.7A2 2 0 0 0 18 8V7z"/><rect x="6" y="20" width="12" height="2"/></svg>
+        <p class="r lg-x">Platz 1</p>
+        <p class="w lg-x" data-praemie="1"></p>
+      </div>
+      <div class="lg-prize silver">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3zm0 4H6v1a2 2 0 0 0 1 1.7zm10 0v2.7A2 2 0 0 0 18 8V7z"/><rect x="6" y="20" width="12" height="2"/></svg>
+        <p class="r lg-x">Platz 2</p>
+        <p class="w lg-x" data-praemie="2"></p>
+      </div>
+    </div>
+    <p class="lg-note" data-prizes data-praemie="hinweis" hidden></p>
+    <div class="lg-teaser" data-teaser>
+      <div class="lg-prizes">
+        <div class="lg-prize gold lg-covered">
+          <p class="r lg-x">Platz 1</p>
+          <p class="q lg-x">???</p>
+        </div>
+        <div class="lg-prize silver lg-covered">
+          <p class="r lg-x">Platz 2</p>
+          <p class="q lg-x">???</p>
+        </div>
+      </div>
+      <p class="lg-note">Enthüllung an Spieltag <span data-praemien-ab>2</span></p>
+    </div>
+  </section>
+
+  <section class="lg-sec" id="regeln">
+    <div class="lg-sechead"><h2 class="lg-x">So holt ihr Punkte</h2></div>
+    <div class="lg-gate">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <div><p class="t lg-x">Eure Quali-Marke</p><p>Jeder Standort hat eine eigene Quali-Marke für die Produktivität. Ab ihr gibt es die ersten Produktivitätspunkte. Für die Prämie müsst ihr sie am Saisonende im Durchschnitt erreichen. Eure Quali-Marke steht in der Tabelle unter eurem Wert.</p></div>
+    </div>
+    <div class="lg-cats">
+      <article class="lg-cat">
+        <div class="lg-cathead"><h3 class="lg-x">Produktivität</h3><button type="button" class="lg-info" aria-expanded="false" aria-controls="kat-info-1" aria-label="Info zu Produktivität">i</button><span class="m">€/Std. IST</span></div>
+        <p class="lg-catinfo" id="kat-info-1" hidden>Umsatz je Mitarbeiterstunde. Die Stufen beginnen an der Quali-Marke eures Standorts.</p>
+        <ol class="lg-tiers" data-kat="Produktivität"></ol>
+      </article>
+      <article class="lg-cat">
+        <div class="lg-cathead"><h3 class="lg-x">Durchschnittsbon</h3><button type="button" class="lg-info" aria-expanded="false" aria-controls="kat-info-2" aria-label="Info zu Durchschnittsbon">i</button><span class="m">€ IST</span></div>
+        <p class="lg-catinfo" id="kat-info-2" hidden>Umsatz je Bon. Upselling steigert den Wert.</p>
+        <ol class="lg-tiers" data-kat="Durchschnittsbon"></ol>
+      </article>
+      <article class="lg-cat">
+        <div class="lg-cathead"><h3 class="lg-x">Systemchecks Intern und Extern</h3><button type="button" class="lg-info" aria-expanded="false" aria-controls="kat-info-3" aria-label="Info zu Systemchecks Intern und Extern">i</button><span class="m">%</span></div>
+        <p class="lg-catinfo" id="kat-info-3" hidden>Jeden Spieltag zählt euer interner Systemcheck. Findet in dem Monat ein externer statt, zählt nur der externe.</p>
+        <ol class="lg-tiers" data-kat="Systemchecks Intern und Extern"></ol>
+      </article>
+      <article class="lg-cat">
+        <div class="lg-cathead"><h3 class="lg-x">Google-Bewertung</h3><button type="button" class="lg-info" aria-expanded="false" aria-controls="kat-info-4" aria-label="Info zu Google-Bewertung">i</button><span class="m">Sterne</span></div>
+        <p class="lg-catinfo" id="kat-info-4" hidden>Sterne-Schnitt bei Google. Freundlicher Service und Produktqualität zahlen sich aus.</p>
+        <ol class="lg-tiers" data-kat="Google-Bewertung"></ol>
+      </article>
+    </div>
+  </section>
+</div>
+<script src="liga.js"></script>
+</body>
+</html>

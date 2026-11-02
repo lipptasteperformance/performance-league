@@ -1,0 +1,2 @@
+Hier die Teamlogos ablegen (PNG oder JPG, am besten quadratisch).
+Den Dateinamen dann in daten/teams.csv in der Spalte "Logo" eintragen, z. B. muenster.png.
