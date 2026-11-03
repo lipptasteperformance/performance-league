@@ -1,0 +1,17 @@
+﻿Kategorie;Einheit;Stufe;Ab;Punkte
+Produktivität;€/Std.;1;70;5
+Produktivität;€/Std.;2;75;10
+Produktivität;€/Std.;3;80;15
+Produktivität;€/Std.;4;85;25
+Durchschnittsbon;€;1;6,3;5
+Durchschnittsbon;€;2;6,45;10
+Durchschnittsbon;€;3;6,6;15
+Durchschnittsbon;€;4;6,75;25
+Systemchecks Intern;%;1;80;5
+Systemchecks Intern;%;2;85;10
+Systemchecks Intern;%;3;90;15
+Systemchecks Intern;%;4;95;25
+Google-Bewertung;Sterne;1;4,6;5
+Google-Bewertung;Sterne;2;4,7;10
+Google-Bewertung;Sterne;3;4,8;15
+Google-Bewertung;Sterne;4;4,9;25

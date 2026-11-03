@@ -3,13 +3,13 @@
   const CFG = Object.assign({ saison: '2027', praemienAbSpieltag: 2, praemienFreigegeben: false }, window.LIGA_EINSTELLUNGEN || {});
   const DATEIEN = { spieltage: 'daten/spieltage.csv', teams: 'daten/teams.csv', regeln: 'daten/regeln.csv' };
 
-  const KATS = ['Produktivität', 'Durchschnittsbon', 'Systemchecks Intern und Extern', 'Google-Bewertung'];
-  const KURZ = { 'Produktivität': 'Prod.', 'Durchschnittsbon': 'Ø-Bon', 'Google-Bewertung': 'Google' };
-  const SYSTEM = 'Systemchecks Intern und Extern';
+  const KATS = ['Produktivität', 'Durchschnittsbon', 'Systemchecks Intern', 'Google-Bewertung'];
+  const KURZ = { 'Produktivität': 'Prod.', 'Durchschnittsbon': 'Ø-Bon', 'Systemchecks Intern': 'System', 'Google-Bewertung': 'Google' };
   // Spalten der Monatswerte -> Kategorie und Einheit
   const SPALTEN = [
     { spalte: 'Produktivität', kategorie: 'Produktivität', einheit: '€/Std.' },
     { spalte: 'Durchschnittsbon', kategorie: 'Durchschnittsbon', einheit: '€' },
+    { spalte: 'Systemcheck intern', kategorie: 'Systemchecks Intern', einheit: '%' },
     { spalte: 'Google-Bewertung', kategorie: 'Google-Bewertung', einheit: 'Sterne' },
   ];
   const DEC = { '€/Std.': 2, '€': 2, '%': 1, 'Sterne': 1 };
@@ -91,10 +91,6 @@
         const w = zahl(feld(row, s.spalte));
         if (w != null) werte.push({ spieltag, monat, standort, kategorie: s.kategorie, einheit: s.einheit, wert: w });
       }
-      // Systemchecks: externer Check zählt, wenn es einen gab, sonst der interne
-      const extern = zahl(feld(row, 'Systemcheck extern'));
-      const intern = zahl(feld(row, 'Systemcheck intern'));
-      if (extern != null || intern != null) werte.push({ spieltag, monat, standort, kategorie: SYSTEM, einheit: '%', wert: extern != null ? extern : intern, quelle: extern != null ? 'extern' : 'intern' });
     }
 
     // Punkte je Wert; Produktivitätsstufen beginnen an der Quali-Marke des Standorts
@@ -213,8 +209,7 @@
       const level = Math.min(4, stufen.filter((x) => r.punkte >= x.punkte).length);
       const tile = el('div', 'lg-kat t' + level);
       tile.setAttribute('aria-label', kat + ': ' + f0(r.punkte) + ' Punkte');
-      const label = r.quelle ? (r.quelle === 'extern' ? 'Sys. ext.' : 'Sys. int.') : (KURZ[kat] || kat);
-      tile.append(el('span', 'p', f0(r.punkte)), el('span', 'n', label));
+      tile.append(el('span', 'p', f0(r.punkte)), el('span', 'n', KURZ[kat] || kat));
       box.append(tile);
     }
     return box;

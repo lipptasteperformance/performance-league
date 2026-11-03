@@ -28,7 +28,7 @@ Hinweis: Eine Seite auf GitHub Pages ist öffentlich. Jeder mit der Adresse kann
 ## Jeden Monat: neue Werte eintragen
 
 1. `daten/spieltage.csv` mit Excel öffnen.
-2. Pro Standort eine neue Zeile anfügen: Spieltag, Monat, Standort, Produktivität, Durchschnittsbon, Systemcheck intern (Durchschnitt der internen Checks im Monat), Systemcheck extern (leer lassen, wenn keiner stattfand), Google-Bewertung. Zahlen ganz normal mit Komma eintragen, z. B. `6,75`.
+2. Pro Standort eine neue Zeile anfügen: Spieltag, Monat, Standort, Produktivität, Durchschnittsbon, Systemcheck intern (Durchschnitt der internen Checks im Monat), Google-Bewertung. Zahlen ganz normal mit Komma eintragen, z. B. `6,75`.
 3. Speichern und das Format **CSV** beibehalten.
 4. Auf GitHub in den Ordner `daten` gehen, **Add file → Upload files**, die Datei hineinziehen und **Commit changes** klicken. Die alte Datei wird ersetzt.
 5. Nach 1–2 Minuten zeigt die Seite den neuen Spieltag.
