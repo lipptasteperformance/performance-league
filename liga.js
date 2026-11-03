@@ -3,13 +3,13 @@
   const CFG = Object.assign({ saison: '2027', praemienAbSpieltag: 2, praemienFreigegeben: false }, window.LIGA_EINSTELLUNGEN || {});
   const DATEIEN = { spieltage: 'daten/spieltage.csv', teams: 'daten/teams.csv', regeln: 'daten/regeln.csv' };
 
-  const KATS = ['Produktivität', 'Durchschnittsbon', 'Systemchecks Intern', 'Google-Bewertung'];
-  const KURZ = { 'Produktivität': 'Prod.', 'Durchschnittsbon': 'Ø-Bon', 'Systemchecks Intern': 'System', 'Google-Bewertung': 'Google' };
+  const KATS = ['Produktivität', 'Durchschnittsbon', 'Systemcheck Intern', 'Google-Bewertung'];
+  const KURZ = { 'Produktivität': 'Prod.', 'Durchschnittsbon': 'Ø-Bon', 'Systemcheck Intern': 'System', 'Google-Bewertung': 'Google' };
   // Spalten der Monatswerte -> Kategorie und Einheit
   const SPALTEN = [
     { spalte: 'Produktivität', kategorie: 'Produktivität', einheit: '€/Std.' },
     { spalte: 'Durchschnittsbon', kategorie: 'Durchschnittsbon', einheit: '€' },
-    { spalte: 'Systemcheck intern', kategorie: 'Systemchecks Intern', einheit: '%' },
+    { spalte: 'Systemcheck intern', kategorie: 'Systemcheck Intern', einheit: '%' },
     { spalte: 'Google-Bewertung', kategorie: 'Google-Bewertung', einheit: 'Sterne' },
   ];
   const DEC = { '€/Std.': 2, '€': 2, '%': 1, 'Sterne': 1 };
@@ -73,7 +73,9 @@
   // ---------- Berechnung ----------
   const berechne = (rohSpieltage, rohTeams, rohRegeln) => {
     const teams = rohTeams.map((t) => ({ standort: feld(t, 'Standort'), kuerzel: feld(t, 'Kürzel') || '', quali: zahl(feld(t, 'Quali-Marke')), logo: feld(t, 'Logo') || '' })).filter((t) => t.standort);
-    const regeln = rohRegeln.map((r) => ({ kategorie: feld(r, 'Kategorie'), einheit: feld(r, 'Einheit'), stufe: zahl(feld(r, 'Stufe')), ab: zahl(feld(r, 'Ab')), punkte: zahl(feld(r, 'Punkte')) }))
+    // Ältere Namen der Systemcheck-Kategorie ("Systemchecks Intern und Extern" usw.) gelten weiter
+    const katName = (k) => (/^systemcheck/i.test(String(k || '').trim()) ? 'Systemcheck Intern' : k);
+    const regeln = rohRegeln.map((r) => ({ kategorie: katName(feld(r, 'Kategorie')), einheit: feld(r, 'Einheit'), stufe: zahl(feld(r, 'Stufe')), ab: zahl(feld(r, 'Ab')), punkte: zahl(feld(r, 'Punkte')) }))
       .filter((r) => r.kategorie && r.ab != null && r.punkte != null)
       .sort((a, b) => a.ab - b.ab);
     const stufenVon = (kat) => regeln.filter((r) => r.kategorie === kat);
